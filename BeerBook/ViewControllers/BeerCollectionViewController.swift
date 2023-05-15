@@ -7,17 +7,21 @@
 
 import UIKit
 
-final class BeerCollectionViewController: UICollectionViewController {
+final class BeerCollectionViewController: UITableViewController {
     
-    private let beerItem = BeerItemCell()
+    private var beers: [Beer] = []
 
     // MARK: UICollectionViewDataSource
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        beers.count
     }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "beerItem", for: indexPath)
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "beerItem", for: indexPath)
+        guard let cell = cell as? BeerItemCell else { return UITableViewCell() }
+        
+        let beer = beers[indexPath.row]
+        cell.configure(with: beer)
         
         return cell
     }
@@ -36,11 +40,24 @@ final class BeerCollectionViewController: UICollectionViewController {
     */
 }
 
- // MARK: - UICollectionViewDelegateFlowLayout
-extension BeerCollectionViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: UIScreen.main.bounds.width, height: 128)
+ // MARK: - NetWorking
+extension BeerCollectionViewController {
+    func fetchBeerCollection() {
+        URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
+            guard let data else {
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                self?.beers = try decoder.decode([Beer].self, from: data)
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }.resume()
     }
 }
