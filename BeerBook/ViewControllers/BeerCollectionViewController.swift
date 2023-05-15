@@ -10,6 +10,12 @@ import UIKit
 final class BeerCollectionViewController: UICollectionViewController {
     
     private let beerItem = BeerItemCell()
+    private var beers: [Beer] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        fetchBeerCollection()
+    }
 
     // MARK: UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -43,4 +49,37 @@ extension BeerCollectionViewController: UICollectionViewDelegateFlowLayout {
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: UIScreen.main.bounds.width, height: 128)
     }
+}
+
+// MARK: - NetWorking
+extension BeerCollectionViewController {
+   func fetchBeerCollection() {
+       let baseUrl = URL(string: "https://api.punkapi.com/v2/beers")!
+       URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
+           guard let data else {
+               print(error?.localizedDescription ?? "No error description")
+               return
+           }
+           
+           do {
+               let decoder = JSONDecoder()
+               self?.beers = try decoder.decode([Beer].self, from: data)
+               DispatchQueue.main.async { [weak self] in
+                   for beer in self?.beers ?? [] {
+                       self?.beerItem.beerNameLabel.text = "Name: \(beer.name)"
+                       self?.beerItem.degreeLabel.text = "Degree: \(beer.abv)"
+                       
+                       DispatchQueue.global().async { [weak self] in
+                           guard let imageData = try? Data(contentsOf: beer.image_url) else { return }
+                           DispatchQueue.main.async {
+                               self?.beerItem.beerImageView.image = UIImage(data: imageData)
+                           }
+                       }
+                   }
+               }
+           } catch {
+               print(error.localizedDescription)
+           }
+       }.resume()
+   }
 }

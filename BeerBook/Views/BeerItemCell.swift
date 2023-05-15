@@ -10,4 +10,5 @@ import UIKit
 final class BeerItemCell: UITableViewCell {
     @IBOutlet var beerNameLabel: UILabel!
     @IBOutlet var degreeLabel: UILabel!
+    @IBOutlet var beerImageView: UIImageView!
 }
