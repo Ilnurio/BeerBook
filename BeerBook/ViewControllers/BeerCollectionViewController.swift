@@ -76,6 +76,7 @@ extension BeerCollectionViewController {
                            }
                        }
                    }
+                   print(self?.beers ?? "something wrong")
                }
            } catch {
                print(error.localizedDescription)
