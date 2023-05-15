@@ -27,10 +27,10 @@ enum UserAction: CaseIterable {
 class MainCollectionViewController: UICollectionViewController {
     
     private let userActions = UserAction.allCases
+    private let beerItem = BeerItemCell()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "mainscreen.jpeg")!)
     }
 
     // MARK: UICollectionViewDataSource
@@ -53,6 +53,7 @@ class MainCollectionViewController: UICollectionViewController {
         switch userAction {
             
         case .beerLibrary: performSegue(withIdentifier: "showBeerLibrary", sender: nil)
+            fetchBeerCollection()
         case .myCollection: performSegue(withIdentifier: "showMyCollection", sender: nil)
         case .aboutApp: performSegue(withIdentifier: "showAboutApp", sender: nil)
         }
@@ -76,4 +77,36 @@ extension MainCollectionViewController: UICollectionViewDelegateFlowLayout {
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: UIScreen.main.bounds.width - 48, height: 100)
     }
+}
+
+// MARK: - NetWorking
+extension MainCollectionViewController {
+   func fetchBeerCollection() {
+       let baseUrl = URL(string: "https://api.punkapi.com/v2/beers")!
+       URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
+           guard let data else {
+               print(error?.localizedDescription ?? "No error description")
+               return
+           }
+           
+           do {
+               let decoder = JSONDecoder()
+               let beer = try decoder.decode(Beer.self, from: data)
+               DispatchQueue.main.async { [weak self] in
+                   self?.beerItem.beerNameLabel.text = "Name: \(Beer.name)"
+                       self?.beerItem.degreeLabel.text = "Degree: \(Beer.abv)"
+                       
+                       DispatchQueue.global().async { [weak self] in
+                           guard let imageData = try? Data(contentsOf: Beer.image_url) else { return }
+                           DispatchQueue.main.async {
+                               self?.beerItem.beerImageView.image = UIImage(data: imageData)
+                       }
+                   }
+                   print(self?.beers ?? "something wrong")
+               }
+           } catch {
+               print(error.localizedDescription)
+           }
+       }.resume()
+   }
 }
