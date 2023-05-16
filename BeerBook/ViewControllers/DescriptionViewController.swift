@@ -9,25 +9,37 @@ import UIKit
 
 class DescriptionViewController: UIViewController {
     
-    
-    @IBOutlet var DescriptionLabel: UILabel!
+    @IBOutlet var descriptionLabel: UILabel!
     @IBOutlet var taglineLabel: UILabel!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
+    private var beers: [Beer] = []
     
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func configure(with beer: Beer) {
+        descriptionLabel.text = beer.description
+        taglineLabel.text = beer.tagline
     }
-    */
+}
 
+// MARK: - NetWorking
+extension DescriptionViewController {
+   func fetchDescriptionOfBeer() {
+       URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
+           guard let data else {
+               print(error?.localizedDescription ?? "No error description")
+               return
+           }
+           
+           do {
+               let decoder = JSONDecoder()
+               self?.beers = try decoder.decode([Beer].self, from: data)
+               DispatchQueue.main.async {
+                   for beer in self?.beers ?? [] {
+                       self?.configure(with: beer)
+                   }
+               }
+           } catch {
+               print(error.localizedDescription)
+           }
+       }.resume()
+   }
 }

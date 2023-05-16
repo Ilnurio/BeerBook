@@ -24,8 +24,6 @@ enum UserAction: CaseIterable {
     }
 }
 
-let baseUrl = URL(string: "https://api.punkapi.com/v2/beers")!
-
 class MainCollectionViewController: UICollectionViewController {
     
     private let userActions = UserAction.allCases

@@ -28,16 +28,14 @@ final class BeerCollectionViewController: UITableViewController {
 
     // MARK: UICollectionViewDelegate
     
-    
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "showDescription" {
+            guard let descriptionVC = segue.destination as? DescriptionViewController else { return }
+            descriptionVC.fetchDescriptionOfBeer()
+        }
     }
-    */
 }
 
  // MARK: - NetWorking
@@ -51,6 +49,7 @@ extension BeerCollectionViewController {
             
             do {
                 let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
                 self?.beers = try decoder.decode([Beer].self, from: data)
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()

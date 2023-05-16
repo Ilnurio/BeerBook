@@ -12,16 +12,22 @@ final class BeerItemCell: UITableViewCell {
     @IBOutlet var degreeLabel: UILabel!
     @IBOutlet var beerImage: UIImageView!
     
+    private let networkManager = NetworkManager.shared
+    
     func configure(with beer: Beer) {
-        beerNameLabel.text = (beer.name)
+        beerNameLabel.text = beer.name
         degreeLabel.text = "Degree: \(beer.abv) %"
         
         // загрузка изображений
-        DispatchQueue.global().async { [weak self] in
-            guard let imageData = try? Data(contentsOf: beer.image_url) else { return }
-            DispatchQueue.main.async {
-                self?.beerImage.image = UIImage(data: imageData)
-            }
+//        DispatchQueue.global().async { [weak self] in
+//            guard let imageData = try? Data(contentsOf: beer.imageUrl) else { return }
+//            DispatchQueue.main.async {
+//                self?.beerImage.image = UIImage(data: imageData)
+//            }
+//        }
+        
+        networkManager.fetchImage(from: beer.imageUrl) { [weak self] imageData in
+            self?.beerImage.image = UIImage(data: imageData)
         }
     }
 }

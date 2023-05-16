@@ -10,7 +10,7 @@ import Foundation
 struct Beer: Decodable {
     let name: String
     let abv: Double
-    let image_url: URL
+    let imageUrl: URL
     let tagline: String
     let description: String
 }

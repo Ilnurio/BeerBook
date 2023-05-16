@@ -242,7 +242,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Description" id="FQ2-ka-8B6"/>
                     <connections>
-                        <outlet property="DescriptionLabel" destination="bzd-1w-PN9" id="EoY-2M-XdS"/>
+                        <outlet property="descriptionLabel" destination="bzd-1w-PN9" id="EoY-2M-XdS"/>
                         <outlet property="taglineLabel" destination="3tQ-Zl-vae" id="AWp-nm-gHN"/>
                     </connections>
                 </viewController>
