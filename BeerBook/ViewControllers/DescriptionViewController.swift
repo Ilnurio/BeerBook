@@ -21,25 +21,25 @@ class DescriptionViewController: UIViewController {
 }
 
 // MARK: - NetWorking
-extension DescriptionViewController {
-   func fetchDescriptionOfBeer() {
-       URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
-           guard let data else {
-               print(error?.localizedDescription ?? "No error description")
-               return
-           }
-           
-           do {
-               let decoder = JSONDecoder()
-               self?.beers = try decoder.decode([Beer].self, from: data)
-               DispatchQueue.main.async {
-                   for beer in self?.beers ?? [] {
-                       self?.configure(with: beer)
-                   }
-               }
-           } catch {
-               print(error.localizedDescription)
-           }
-       }.resume()
-   }
-}
+//extension DescriptionViewController {
+//   func fetchDescriptionOfBeer() {
+//       URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
+//           guard let data else {
+//               print(error?.localizedDescription ?? "No error description")
+//               return
+//           }
+//
+//           do {
+//               let decoder = JSONDecoder()
+//               self?.beers = try decoder.decode([Beer].self, from: data)
+//               DispatchQueue.main.async {
+//                   for beer in self?.beers ?? [] {
+//                       self?.configure(with: beer)
+//                   }
+//               }
+//           } catch {
+//               print(error.localizedDescription)
+//           }
+//       }.resume()
+//   }
+//}

@@ -26,8 +26,13 @@ final class BeerItemCell: UITableViewCell {
 //            }
 //        }
         
-        networkManager.fetchImage(from: beer.imageUrl) { [weak self] imageData in
-            self?.beerImage.image = UIImage(data: imageData)
+        networkManager.fetchImage(from: beer.imageUrl) { [weak self] result in
+            switch result {
+            case .success(let imageData):
+                self?.beerImage.image = UIImage(data: imageData)
+            case .failure(let error):
+                print(error)
+            }
         }
     }
 }

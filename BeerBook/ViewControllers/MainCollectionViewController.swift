@@ -24,10 +24,11 @@ enum UserAction: CaseIterable {
     }
 }
 
-class MainCollectionViewController: UICollectionViewController {
+final class MainCollectionViewController: UICollectionViewController {
     
     private let userActions = UserAction.allCases
     private let beerItem = BeerItemCell()
+    private let networkManager = NetworkManager.shared
     
     // MARK: UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

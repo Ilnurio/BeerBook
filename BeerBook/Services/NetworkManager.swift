@@ -7,19 +7,53 @@
 
 import Foundation
 
+// обработка ошибок
+enum NetworkError: Error {
+    case invalidURL
+    case noData
+    case decodingError
+}
+
 let baseUrl = URL(string: "https://api.punkapi.com/v2/beers")!
+
 
 final class NetworkManager {
     static let shared = NetworkManager()
+    private var beers:[Beer] = []
     
     private init() {}
     
-    func fetchImage(from url: URL, completion: @escaping (Data) -> Void) {
+    func fetchImage(from url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         DispatchQueue.global().async {
-            guard let imageData = try? Data(contentsOf: url) else { return }
+            guard let imageData = try? Data(contentsOf: url) else {
+                completion(.failure(.noData))
+                return
+            }
             DispatchQueue.main.async {
-                completion(imageData)
+                completion(.success(imageData))
             }
         }
+    }
+    
+    // универсальный метод fetch()
+    func fetch<T: Decodable>(_ type: T.Type, from url: URL, completion: @escaping(Result<T, NetworkError>) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            guard let data else {
+                completion(.failure(.noData))
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let dataModel = try decoder.decode(T.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(dataModel))
+                }
+            } catch {
+                completion(.failure(.decodingError))
+            }
+        }.resume()
     }
 }

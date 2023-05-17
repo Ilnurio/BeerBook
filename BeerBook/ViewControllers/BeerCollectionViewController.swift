@@ -10,6 +10,7 @@ import UIKit
 final class BeerCollectionViewController: UITableViewController {
     
     private var beers: [Beer] = []
+    private let networkManager = NetworkManager.shared
 
     // MARK: UICollectionViewDataSource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -30,15 +31,15 @@ final class BeerCollectionViewController: UITableViewController {
     
     // MARK: - Navigation
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDescription" {
-            guard let descriptionVC = segue.destination as? DescriptionViewController else { return }
-            descriptionVC.fetchDescriptionOfBeer()
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "showDescription" {
+//            guard let descriptionVC = segue.destination as? DescriptionViewController else { return }
+//            //descriptionVC.fetchDescriptionOfBeer()
+//        }
+//    }
 }
 
- // MARK: - NetWorking
+ // MARK: - Networking
 extension BeerCollectionViewController {
     func fetchBeerCollection() {
         URLSession.shared.dataTask(with: baseUrl) { [weak self] data, _, error in
@@ -60,3 +61,6 @@ extension BeerCollectionViewController {
         }.resume()
     }
 }
+    
+
+
