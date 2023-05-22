@@ -34,7 +34,7 @@ final class BeerCollectionViewController: UITableViewController {
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        if segue.identifier == "showDescription" {
 //            guard let descriptionVC = segue.destination as? DescriptionViewController else { return }
-//            //descriptionVC.fetchDescriptionOfBeer()
+//            descriptionVC.fetchDescriptionOfBeer()
 //        }
 //    }
 }

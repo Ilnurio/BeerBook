@@ -58,7 +58,7 @@ final class NetworkManager {
     }
     
     // MARK: - postRequest
-    func postRequest(with parameters: [String: Any], to url: URL, completion: @escaping(Result<Any, NetworkError>) -> Void) {
+    func postRequest(with parameters: [String: Any], to url: URL, completion: @escaping (Result<Any, NetworkError>) -> Void) {
         let serializedData = try? JSONSerialization.data(withJSONObject: parameters)
         
         var request = URLRequest(url: url)
@@ -84,6 +84,33 @@ final class NetworkManager {
         }.resume()
     }
     
+    // postRequestWithModels
+    func postRequest(with parameters: Beer, to url: URL, completion: @escaping (Result<Any, NetworkError>) -> Void) {
+        guard let encodedJSON = try? JSONEncoder().encode(parameters) else {
+            completion(.failure(.noData))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = encodedJSON
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data else {
+                completion(.failure(.noData))
+                print(error?.localizedDescription ?? "No error description")
+                return
+            }
+            
+            do {
+                let beer = try JSONDecoder().decode(Beer.self, from: data)
+                completion(.success(beer))
+            } catch {
+                completion(.failure(.decodingError))
+            }
+        }.resume()
+    }
 }
 
 

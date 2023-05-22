@@ -49,3 +49,26 @@ class AboutAppViewController: UIViewController {
 //        }
 //    }
 //}
+
+ // MARK: - postRequestWithModel
+extension AboutAppViewController {
+    func postRequestWithModel() {
+        let postUrl = URL(string: "https://jsonplaceholder.typicode.com/posts")!
+        
+        let beer = Beer(
+            name: "MilkOfAmnezia",
+            abv: 5.5,
+            imageUrl: baseUrl,
+            tagline: "aromaTerapia",
+            description: "The Best Beer you ever drink")
+        
+        networkManager.postRequest(with: beer, to: postUrl) { result in
+            switch result {
+            case .success(let beer):
+                print(beer)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+}

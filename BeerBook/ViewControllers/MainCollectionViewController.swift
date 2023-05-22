@@ -63,12 +63,12 @@ final class MainCollectionViewController: UICollectionViewController {
             beerCollectionVC.fetchBeerCollection()
         }
         
-//        if segue.identifier == "showAboutApp" {
-//            guard let aboutVC = segue.destination as? AboutAppViewController else {
-//                return
-//            }
-//            aboutVC.postRequestWithDict()
-//        }
+        if segue.identifier == "showAboutApp" {
+            guard let aboutVC = segue.destination as? AboutAppViewController else {
+                return
+            }
+            aboutVC.postRequestWithModel()
+        }
     }
 }
 

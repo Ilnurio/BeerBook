@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Beer: Decodable {
+struct Beer: Codable {
     let name: String
     let abv: Double
     let imageUrl: URL
