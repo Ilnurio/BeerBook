@@ -103,10 +103,10 @@
             </objects>
             <point key="canvasLocation" x="1279" y="288"/>
         </scene>
-        <!--View Controller-->
+        <!--About App View Controller-->
         <scene sceneID="lkU-AW-LJ9">
             <objects>
-                <viewController id="e0a-nO-6uj" sceneMemberID="viewController">
+                <viewController id="e0a-nO-6uj" customClass="AboutAppViewController" customModule="BeerBook" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LAw-JS-sES">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

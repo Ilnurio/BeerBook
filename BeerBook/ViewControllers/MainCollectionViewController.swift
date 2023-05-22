@@ -62,6 +62,13 @@ final class MainCollectionViewController: UICollectionViewController {
             guard let beerCollectionVC = segue.destination as? BeerCollectionViewController else { return }
             beerCollectionVC.fetchBeerCollection()
         }
+        
+//        if segue.identifier == "showAboutApp" {
+//            guard let aboutVC = segue.destination as? AboutAppViewController else {
+//                return
+//            }
+//            aboutVC.postRequestWithDict()
+//        }
     }
 }
 
@@ -73,3 +80,5 @@ extension MainCollectionViewController: UICollectionViewDelegateFlowLayout {
         CGSize(width: UIScreen.main.bounds.width - 48, height: 100)
     }
 }
+
+
